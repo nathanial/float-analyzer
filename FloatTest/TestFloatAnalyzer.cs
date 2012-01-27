@@ -9,7 +9,6 @@ namespace FloatTest {
     [TestFixture]
     public class TestFloatAnalyzer {
 
-
         [Test]
         public void ZeroByte() {
             var analyzer = new FloatAnalyzer();

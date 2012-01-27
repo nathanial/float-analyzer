@@ -28,7 +28,7 @@
                 </Ribbon:RibbonGroup>
             </Ribbon:RibbonTab>
         </Ribbon:Ribbon>
-        <TextBox Grid.Row="1" Name="output">
+        <TextBox Grid.Row="1" Name="output" VerticalScrollBarVisibility="Visible">
             
         </TextBox>
     </Grid>
