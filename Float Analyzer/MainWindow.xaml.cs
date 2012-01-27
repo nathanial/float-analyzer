@@ -12,10 +12,11 @@ namespace Float_Analyzer {
         }
 
         void CalculateClick(object sender, RoutedEventArgs e) {
+
         }
 
         void AboutClick(object sender, RoutedEventArgs e) {
-            MessageBox.Show("Erdos Miller Float Analyzer: 1.0", "Version", MessageBoxButton.OK,
+            MessageBox.Show("EM Float Analyzer 1.0", "Version", MessageBoxButton.OK,
                             MessageBoxImage.Information);
         }
 
