@@ -21,14 +21,52 @@
                     <Ribbon:RibbonButton Label="Calculate" Click="CalculateClick" LargeImageSource="/Images/calculator.png" />
                 </Ribbon:RibbonGroup>
                 <Ribbon:RibbonGroup Header="Bit Mode">
+                    <Ribbon:RibbonGroup.Resources>
+                        <Style TargetType="Label">
+                            <Setter Property="Width" Value="60" />
+                        </Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Margin" Value="0,0,10,0" />
+                        </Style>
+                    </Ribbon:RibbonGroup.Resources>
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Bits" />
-                        <extToolkit:IntegerUpDown Height="20" FontStretch="Condensed" FontSize="9" Value="8" />
+                        <extToolkit:IntegerUpDown Height="20" FontSize="9" Value="8" Name="bits" ValueChanged="BitsValueChanged" />
                     </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Fraction" />
+                        <extToolkit:IntegerUpDown Height="20" FontSize="9" Value="4" Name="fraction" ValueChanged="FractionValueChanged" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Exponent" />
+                        <extToolkit:IntegerUpDown Height="20" FontSize="9" Value="3" Name="exponent" ValueChanged="ExponentValueChanged" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Exp. Bias" />
+                        <extToolkit:IntegerUpDown Height="20" FontSize="9" Value="4" Name="expBias" ValueChanged="ExpBiasValueChanged" />
+                    </StackPanel>
+                </Ribbon:RibbonGroup>
+                <Ribbon:RibbonGroup Header="Output">
+                    <Ribbon:RibbonRadioButton Label="Newline" IsChecked="True" Click="OutputRadioButtonClick" Name="newLine" />
+                    <Ribbon:RibbonRadioButton Label="Space" Click="OutputRadioButtonClick"  Name="space"/>
+                    <Ribbon:RibbonRadioButton Label="Comma" Click="OutputRadioButtonClick" Name="comma"/>
+                    <Ribbon:RibbonComboBox Label="Per Line" IsEnabled="False" Name="perLine">
+                        <Ribbon:RibbonGallery SelectedValue="10"
+                          SelectedValuePath="Content"
+                          MaxColumnCount="1">
+                            <Ribbon:RibbonGalleryCategory>
+                                <Ribbon:RibbonGalleryItem Content="3" />
+                                <Ribbon:RibbonGalleryItem Content="5" />
+                                <Ribbon:RibbonGalleryItem Content="10"  />
+                                <Ribbon:RibbonGalleryItem Content="15"  />
+                                <Ribbon:RibbonGalleryItem Content="20"  />
+                            </Ribbon:RibbonGalleryCategory>
+                        </Ribbon:RibbonGallery>
+                    </Ribbon:RibbonComboBox>
                 </Ribbon:RibbonGroup>
             </Ribbon:RibbonTab>
         </Ribbon:Ribbon>
-        <TextBox Grid.Row="1" Name="output" VerticalScrollBarVisibility="Visible">
+        <TextBox Grid.Row="1" Name="output" VerticalScrollBarVisibility="Visible" TextWrapping="Wrap" FontFamily="Courier New">
             
         </TextBox>
     </Grid>

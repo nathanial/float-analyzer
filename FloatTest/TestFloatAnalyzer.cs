@@ -14,8 +14,6 @@ namespace FloatTest {
             var analyzer = new FloatAnalyzer();
             var bits = analyzer.ByteToBits(0x00).ToArray();
             Assert.IsFalse(bits.Any(x => x == Bit.One));
-
-
         }
 
         [Test]

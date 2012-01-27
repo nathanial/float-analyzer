@@ -28,7 +28,13 @@ namespace Floats {
             var max = Math.Pow(2, desc.BitCount);
             for (var i = 0; i < max; i++) {
                 var bytes = BitConverter.GetBytes(i);
-                var bits = bytes.SelectMany(ByteToBits).ToArray();
+                var byteCount = desc.BitCount/8;
+                var remainder = desc.BitCount%8;
+                if(remainder > 0) {
+                    byteCount += 1;
+                }
+                var newBytes = bytes.Take(byteCount).Reverse().ToArray();
+                var bits = newBytes.SelectMany(ByteToBits).Reverse().Take(desc.BitCount).ToArray();
                 var floatParts = ToFloatParts(desc, bits);
                 var value = FromFloatParts(desc, floatParts);
                 yield return value;
@@ -51,11 +57,21 @@ namespace Floats {
         }
 
         public FloatParts ToFloatParts(FloatDescription desc, Bit[] bits) {
+            if(bits.Length != desc.BitCount) {
+                throw new Exception("not enough bits");
+            }
+            var e = new List<Bit>();
+            var f = new List<Bit>();
+            if(desc.ExponentBits > 0) {
+                e = bits.Skip(1).Take(desc.ExponentBits).ToList();
+            } 
+            if(desc.SignificandBits > 0) {
+                f = bits.Skip(1 + desc.ExponentBits).ToList();
+            }
             var parts = new FloatParts {
                 Sign = bits[0],
-                Exponent = bits.Skip(1).Take(desc.ExponentBits).ToArray(),
-                Fraction =
-                    bits.Skip(1 + desc.ExponentBits).Take(desc.SignificandBits).ToArray()
+                Exponent = e.ToArray(),
+                Fraction = f.ToArray()
             };
             return parts;
         }
