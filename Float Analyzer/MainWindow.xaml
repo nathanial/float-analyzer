@@ -1,0 +1,35 @@
+﻿<Ribbon:RibbonWindow x:Class="Float_Analyzer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Float Analyzer" Height="550" Width="870" 
+        xmlns:Ribbon="http://schemas.microsoft.com/winfx/2006/xaml/presentation/ribbon"
+                     xmlns:extToolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit/extended">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Ribbon:Ribbon Grid.Row="0">
+            <Ribbon:Ribbon.ApplicationMenu>
+                <Ribbon:RibbonApplicationMenu>
+                    <Ribbon:RibbonApplicationMenuItem Header="About" Click="AboutClick" />
+                    <Ribbon:RibbonApplicationMenuItem Header="Exit" Click="ExitClick" />
+                </Ribbon:RibbonApplicationMenu>
+            </Ribbon:Ribbon.ApplicationMenu>
+            <Ribbon:RibbonTab Header="Analyzer">
+                <Ribbon:RibbonGroup Header="Actions">
+                    <Ribbon:RibbonButton Label="Calculate" Click="CalculateClick" LargeImageSource="/Images/calculator.png" />
+                </Ribbon:RibbonGroup>
+                <Ribbon:RibbonGroup Header="Bit Mode">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Bits" />
+                        <extToolkit:IntegerUpDown Height="20" FontStretch="Condensed" FontSize="9" Value="8" />
+                    </StackPanel>
+                </Ribbon:RibbonGroup>
+            </Ribbon:RibbonTab>
+        </Ribbon:Ribbon>
+        <TextBox Grid.Row="1" Name="output">
+            
+        </TextBox>
+    </Grid>
+</Ribbon:RibbonWindow>
