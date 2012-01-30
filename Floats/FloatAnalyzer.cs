@@ -27,18 +27,23 @@ namespace Floats {
         public IEnumerable<float> Enumerate(FloatDescription desc) {
             var max = Math.Pow(2, desc.BitCount);
             for (var i = 0; i < max; i++) {
-                var bytes = BitConverter.GetBytes(i);
-                var byteCount = desc.BitCount/8;
-                var remainder = desc.BitCount%8;
-                if(remainder > 0) {
-                    byteCount += 1;
-                }
-                var newBytes = bytes.Take(byteCount).Reverse().ToArray();
-                var bits = newBytes.SelectMany(ByteToBits).Reverse().Take(desc.BitCount).ToArray();
-                var floatParts = ToFloatParts(desc, bits);
-                var value = FromFloatParts(desc, floatParts);
+                var value = FromIntegerValue(desc, i);
                 yield return value;
             }
+        }
+
+        public float FromIntegerValue(FloatDescription desc, int intValue) {
+            var bytes = BitConverter.GetBytes(intValue);
+            var byteCount = desc.BitCount/8;
+            var remainder = desc.BitCount%8;
+            if (remainder > 0) {
+                byteCount += 1;
+            }
+            var newBytes = bytes.Take(byteCount).Reverse().ToArray();
+            var bits = newBytes.SelectMany(ByteToBits).Reverse().Take(desc.BitCount).Reverse().ToArray();
+            var floatParts = ToFloatParts(desc, bits);
+            var value = FromFloatParts(desc, floatParts);
+            return value;
         }
 
         public IEnumerable<Bit> ByteToBits(byte b) {

@@ -18,12 +18,7 @@ namespace Float_Analyzer {
 
         void CalculateClick(object sender, RoutedEventArgs e) {
             var analyzer = new FloatAnalyzer();
-            var values = analyzer.Enumerate(new FloatDescription {
-                BitCount = bits.Value.Value,
-                ExponentBias = expBias.Value.Value,
-                ExponentBits = exponent.Value.Value,
-                SignificandBits = fraction.Value.Value
-            }).ToArray();
+            var values = analyzer.Enumerate(CreateFloatDescription()).ToArray();
             Array.Sort(values);
             output.Clear();
             var lcount = int.Parse(perLine.SelectionBoxItem.ToString());
@@ -51,7 +46,7 @@ namespace Float_Analyzer {
         void BitsValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
             if (exponent == null || fraction == null || bits == null) return;
 
-            if(bits.Value.Value < 1) {
+            if (bits.Value.Value < 1) {
                 bits.Value = 1;
             }
 
@@ -76,7 +71,7 @@ namespace Float_Analyzer {
             if (Total > bits.Value.Value) {
                 if (exponent.Value.Value > 0) {
                     exponent.Value -= 1;
-                } else if(fraction.Value.Value > 0) {
+                } else if (fraction.Value.Value > 0) {
                     fraction.Value -= 1;
                 }
             }
@@ -94,17 +89,13 @@ namespace Float_Analyzer {
             if (Total > bits.Value.Value) {
                 if (fraction.Value.Value > 0) {
                     fraction.Value -= 1;
-                } else if(exponent.Value.Value > 0) {
+                } else if (exponent.Value.Value > 0) {
                     exponent.Value -= 1;
                 }
             }
             if (Total < bits.Value.Value) {
                 fraction.Value += 1;
             }
-        }
-
-        void ExpBiasValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
-
         }
 
         void OutputRadioButtonClick(object sender, RoutedEventArgs e) {
@@ -116,5 +107,44 @@ namespace Float_Analyzer {
                 _delimiter = ",";
             }
         }
+
+        void GeneratePatternsClick(object sender, RoutedEventArgs e) {
+            var minValue = min.Value.Value;
+            var maxValue = max.Value.Value;
+            var stepValue = increment.Value.Value;
+            var sumValue = sum.Value.Value;
+            var range = new Range {
+                Min = minValue,
+                Max = maxValue,
+                Step = stepValue
+            };
+            var pgen = new PatternGen {
+                Range = range,
+                Sum = sumValue,
+            };
+            var desc = CreateFloatDescription();
+            var analyzer = new FloatAnalyzer();
+
+            output.Clear();
+
+            //var patterns = pgen.Generate().OrderBy(v => analyzer.FromIntegerValue(desc,v.ValueFrom()));
+            var patterns = pgen.Generate();
+            foreach (var p in patterns) {
+                var intValue = p.ValueFrom();
+                var floatValue = analyzer.FromIntegerValue(desc, intValue);
+                output.AppendText(string.Format("{0} {1}", p, floatValue));
+                output.AppendText("\n");
+            }
+        }
+
+        FloatDescription CreateFloatDescription() {
+            return new FloatDescription {
+                BitCount = bits.Value.Value,
+                ExponentBias = expBias.Value.Value,
+                ExponentBits = exponent.Value.Value,
+                SignificandBits = fraction.Value.Value
+            };
+        }
+
     }
 }
