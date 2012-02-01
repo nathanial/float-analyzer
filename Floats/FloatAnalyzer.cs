@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Floats {
 
@@ -27,20 +26,25 @@ namespace Floats {
         public IEnumerable<float> Enumerate(FloatDescription desc) {
             var max = Math.Pow(2, desc.BitCount);
             for (var i = 0; i < max; i++) {
-                var value = FromIntegerValue(desc, i);
+                var bcount = desc.BitCount / 8;
+                if (desc.BitCount % 8 != 0) {
+                    bcount += 1;
+                }
+                var bytes = BitConverter.GetBytes(i).Take(bcount).Reverse().ToArray();
+                var value = FromBytes(desc, bytes);
                 yield return value;
             }
         }
 
-        public float FromIntegerValue(FloatDescription desc, int intValue) {
-            var bytes = BitConverter.GetBytes(intValue);
-            var byteCount = desc.BitCount/8;
-            var remainder = desc.BitCount%8;
+        public float FromBytes(FloatDescription desc, params byte[] bytes) {
+            var remainder = desc.BitCount % 8;
+            var byteCount = desc.BitCount / 8;
             if (remainder > 0) {
                 byteCount += 1;
             }
-            var newBytes = bytes.Take(byteCount).Reverse().ToArray();
-            var bits = newBytes.SelectMany(ByteToBits).Reverse().Take(desc.BitCount).Reverse().ToArray();
+            if (bytes.Length > byteCount) throw new Exception("too many bytes");
+            var newBytes = bytes.Take(byteCount).ToArray();
+            var bits = newBytes.SelectMany(ByteToBits).Take(desc.BitCount).ToArray();
             var floatParts = ToFloatParts(desc, bits);
             var value = FromFloatParts(desc, floatParts);
             return value;
@@ -62,15 +66,15 @@ namespace Floats {
         }
 
         public FloatParts ToFloatParts(FloatDescription desc, Bit[] bits) {
-            if(bits.Length != desc.BitCount) {
+            if (bits.Length != desc.BitCount) {
                 throw new Exception("not enough bits");
             }
             var e = new List<Bit>();
             var f = new List<Bit>();
-            if(desc.ExponentBits > 0) {
+            if (desc.ExponentBits > 0) {
                 e = bits.Skip(1).Take(desc.ExponentBits).ToList();
-            } 
-            if(desc.SignificandBits > 0) {
+            }
+            if (desc.SignificandBits > 0) {
                 f = bits.Skip(1 + desc.ExponentBits).ToList();
             }
             var parts = new FloatParts {

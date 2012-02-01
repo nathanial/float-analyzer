@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Floats {
@@ -8,9 +9,11 @@ namespace Floats {
         public int V3 { get; set; }
         public Range Range { get; set; }
 
-        public int ValueFrom() {
+        public byte[] GetBytes() {
             var vcount = (Range.Max - Range.Min) / Range.Step;
-            return Adjust(V1) * (vcount * vcount) + Adjust(V2) * vcount + Adjust(V3);
+            var intValue = Adjust(V1) * (vcount * vcount) + Adjust(V1) * vcount + Adjust(V3);
+            var bytes = BitConverter.GetBytes(intValue).Reverse();
+            return bytes.Skip(1).ToArray();
         }
 
         int Adjust(int v) {
@@ -18,7 +21,6 @@ namespace Floats {
         }
 
         public override string ToString() {
-            var vcount = (Range.Max - Range.Min)/Range.Step;
             return string.Format("{0} {1} {2}", V1, V2, V3);
         }
 
@@ -42,10 +44,10 @@ namespace Floats {
             var patterns = new List<Pattern>();
             foreach (var n1 in s1) {
                 var v1 = n1;
-                var s2 = s1.Where(x => x + v1 <= Sum).ToArray();
+                var s2 = s1.ToArray();
                 foreach (var n2 in s2) {
                     var v2 = n2;
-                    var s3 = s2.Where(x => (x + v1 + v2) == Sum).ToArray();
+                    var s3 = s2.ToArray();
                     foreach (var n3 in s3) {
                         var v3 = n3;
                         patterns.Add(new Pattern {

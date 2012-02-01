@@ -46,5 +46,46 @@ namespace FloatTest {
             var bits = analyzer.ByteToBits(0xFF).ToArray();
             Assert.IsTrue(bits.All(x => x != Bit.Zero));
         }
+
+        [Test]
+        public void CheckByteOrder() {
+            var analyzer = new FloatAnalyzer();
+            var d = new FloatDescription {
+                BitCount = 8,
+                ExponentBias = 0,
+                ExponentBits = 3,
+                SignificandBits = 4
+            };
+            
+            var value = analyzer.FromBytes(d,0x00);
+            Assert.AreEqual(0,value);
+
+            value = analyzer.FromBytes(d,0x01);
+            Assert.IsTrue(value > 0);
+
+            value = analyzer.FromBytes(d, 0x82);
+            Assert.IsTrue(value < 0);
+        }
+
+        [Test]
+        public void CheckByteOrder2() {
+            var analyzer = new FloatAnalyzer();
+            var d = new FloatDescription {
+                BitCount = 9,
+                ExponentBias = 0,
+                ExponentBits = 4,
+                SignificandBits = 4
+            };
+
+            var value = analyzer.FromBytes(d, 0x00, 0x00);
+            Assert.AreEqual(0,value);
+
+            value = analyzer.FromBytes(d, 0x00, 0x80);
+            Assert.IsTrue(value > 0);
+
+            value = analyzer.FromBytes(d, 0x82, 0x00);
+            Assert.IsTrue(value < 0);
+        }
+
     }
 }

@@ -127,11 +127,14 @@ namespace Float_Analyzer {
 
             output.Clear();
 
-            //var patterns = pgen.Generate().OrderBy(v => analyzer.FromIntegerValue(desc,v.ValueFrom()));
+            //var patterns = pgen.Generate().OrderBy(v => analyzer.FromIntegerValue(desc,v.GetBytes()));
             var patterns = pgen.Generate();
             foreach (var p in patterns) {
-                var intValue = p.ValueFrom();
-                var floatValue = analyzer.FromIntegerValue(desc, intValue);
+                var bcount = desc.BitCount / 8;
+                if (desc.BitCount % 8 != 0) {
+                    bcount += 1;
+                }
+                var floatValue = analyzer.FromBytes(desc, p.GetBytes().Take(bcount).ToArray());
                 output.AppendText(string.Format("{0} {1}", p, floatValue));
                 output.AppendText("\n");
             }
